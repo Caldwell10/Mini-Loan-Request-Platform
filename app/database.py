@@ -1,7 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-engine = create_engine("postgres+pysocopg2://postgres:postgres@localhost:5342/loans")
+# database connection URL
+database_url = "postgres+pysocopg2://postgres:postgres@localhost:5342/loans"
+
+# create the SQLAlchemy engine object
+engine = create_engine(database_url)
 
 #create a configured Session object
 Sessionmaker = sessionmaker(bind=engine, autoflush=False, autocommit=False)
