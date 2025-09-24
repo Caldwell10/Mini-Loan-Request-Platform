@@ -1,12 +1,14 @@
 import enum
 from database import Base
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 class LoanStatus(enum.Enum):
     PENDING = 'PENDING'
     APPROVED = 'APPROVED'
     REJECTED = 'REJECTED'
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -14,12 +16,31 @@ class User(Base):
     name = Column(String, nullable=False)
     email =Column(String, unique=True, index=True, nullable=False)
     phone_number = Column(String, unique=True, index=True, nullable=False)
+    loans = relationship("Loan", back_populates="user", cascade="all, delete-orphan")
 
 class Loan(Base):
-    __table_name__ = 'loans'
+    __tablename__ = 'loans'
+
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
-    amount = Column()
+    user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"), nullable=False, index=True)
+    amount = Column(Float, nullable=False)
+    status = Column(String, nullable=False, default=LoanStatus.PENDING.value)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default = datetime.utcnow, nullable=False)
+    reason = Column(String, nullable=False, index=True)
+    user = relationship("User", back_populates="loans")
+
+class AuditLog(Base):
+    __tablename__ = 'audit_logs'
+
+    id = Column(Integer, primary_key=True, index=True)
+    direction = Column(String, nullable=False) # inbound or outbound
+    url = Column(String, nullable=False)
+    payload = Column(String, nullable=False)
+    status_code = Column(Integer, nullable=False)
+
+
+
 
 
 
