@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field, EmailStr, condecimal
 from typing import Optional
-from models import LoanStatus
+from .models import LoanStatus
+from decimal import Decimal as decimal
+from datetime import datetime
 
 class UserCreate(BaseModel):
     name: str
@@ -17,17 +19,17 @@ class UserResponse(BaseModel):
         orm_mode = True
 
 class LoanCreate(BaseModel):
-    userid: int
+    user_id: int
     amount: condecimal(gt=0, lt=1000000)
 
 class LoanOut(BaseModel):
     id: int
     user_id: int
-    amount: float
+    amount: decimal
     status: LoanStatus
     reason: str
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
