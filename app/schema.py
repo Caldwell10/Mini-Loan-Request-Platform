@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, condecimal
 from typing import Optional
-from .models import LoanStatus
 from decimal import Decimal as decimal
 from datetime import datetime
 
@@ -26,7 +25,7 @@ class LoanOut(BaseModel):
     id: int
     user_id: int
     amount: decimal
-    status: LoanStatus
+    status: str
     reason: str
     created_at: datetime
     updated_at: datetime
@@ -37,8 +36,8 @@ class LoanOut(BaseModel):
 class WebhookPayload(BaseModel):
     loan_id: int
     score: int
-    status: LoanStatus
-    reason: Optional[str] = None
+    status: str
+    reason: str
 
 
 

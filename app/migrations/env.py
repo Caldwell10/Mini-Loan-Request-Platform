@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from database import Base, database_url
+from app.database import Base, database_url
 import models  # Ensure models are imported for Alembic to detect them
 
 # this is the Alembic Config object, which provides
