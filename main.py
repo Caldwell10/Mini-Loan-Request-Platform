@@ -30,7 +30,7 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)):
 
 
 # create a new loan for a user
-@app.post('/loan_request/{user_id}', response_model=LoanOut)
+@app.post('/loan_request/', response_model=LoanOut)
 def create_loan(user_id: int, payload: LoanCreate, db: Session = Depends(get_db)):
     # check if user exists
     user =db.query(User).filter(User.id ==user_id).first()
@@ -64,6 +64,12 @@ def create_loan(user_id: int, payload: LoanCreate, db: Session = Depends(get_db)
 
     return loan
 
+@app.get('/loan-request/{loan_id}', response_model=LoanOut)
+def get_loan(loan_id: int, db: Session = Depends(get_db)):
+    loan = db.get(Loan, loan_id)
+    if not loan:
+        raise HTTPException(status_code=404, detail="Loan not found")
+    return loan
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
