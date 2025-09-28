@@ -4,14 +4,15 @@ from sqlalchemy.orm import Session
 from fastapi import Depends
 from json import dumps
 import bcrypt
+import json
 
 
-def save_audit_log( direction: str, url: str, payload: dict, status_code: int, db: Session  = Depends(get_db)) -> None:
+def save_audit_log( direction: str, url: str, payload: dict | None, status_code: int, db: Session  = Depends(get_db)) -> None:
     """Save an audit log entry to the database."""
     audit_log = AuditLog(
         direction=direction,
         url=url,
-        payload=payload.dumps(payload),
+        payload=json.dumps(payload) if payload is not None else None,
         status_code=status_code
     )
     db.add(audit_log)
