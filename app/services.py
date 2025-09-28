@@ -1,0 +1,25 @@
+from app.models import AuditLog
+from app.database import get_db
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from json import dumps
+import bcrypt
+
+
+def save_audit_log( direction: str, url: str, payload: dict, status_code: int, db: Session  = Depends(get_db)) -> None:
+    """Save an audit log entry to the database."""
+    audit_log = AuditLog(
+        direction=direction,
+        url=url,
+        payload=payload.dumps(payload),
+        status_code=status_code
+    )
+    db.add(audit_log)
+    db.commit()
+    db.refresh(audit_log)
+
+def hash_password(password: str) -> str:
+    """Hash a password for storing"""
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password
