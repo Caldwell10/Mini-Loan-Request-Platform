@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, condecimal
+from pydantic import BaseModel, Field, EmailStr, condecimal, SecretStr
 from typing import Optional
 from decimal import Decimal as decimal
 from datetime import datetime
@@ -7,6 +7,7 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     phone_number: str
+    password: str = Field(min_length=8)
 
 class UserResponse(BaseModel):
     id: int
@@ -33,7 +34,7 @@ class LoanOut(BaseModel):
     class Config:
         orm_mode = True
 
-class WebhookPayload(BaseModel):
+class WebhookIn(BaseModel):
     loan_id: int
     score: int
     status: str

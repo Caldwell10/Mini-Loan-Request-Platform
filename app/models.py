@@ -8,6 +8,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
+    password = Column(String, nullable=True)
     email =Column(String, unique=True, index=True, nullable=False)
     phone_number = Column(String, unique=True, index=True, nullable=False)
     loans = relationship("Loan", back_populates="user", cascade="all, delete-orphan")
